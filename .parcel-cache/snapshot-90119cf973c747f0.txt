@@ -1,6 +1,11 @@
-7022
+7031
+69/home/relow/projects/playground/three/src/assets/letters-texture7.png1727268548276189749 0
+48/home/relow/projects/playground/three/src/assets1727272345077865753 1
+44/home/relow/projects/playground/three/public1727272304139468136 1
+54/home/relow/projects/playground/three/src/js/matrix.js1727272061393039860 0
+48/home/relow/projects/playground/three/.gitignore1727271601926768603 0
 60/home/relow/projects/playground/three/dist/index.64a4978e.js1725968386470291884 0
-55/home/relow/projects/playground/three/src/js/scripts.js1725968386233294302 0
+55/home/relow/projects/playground/three/src/js/scripts.js1727275137859986817 0
 44/home/relow/projects/playground/three/src/js1725968386235294281 1
 55/home/relow/projects/playground/three/package-lock.json1725962321414375520 0
 69/home/relow/projects/playground/three/node_modules/three/package.json1725962317587414926 0
@@ -2126,8 +2131,8 @@
 71/home/relow/projects/playground/three/node_modules/ordered-binary/.idea1725962084613937289 1
 92/home/relow/projects/playground/three/node_modules/@swc/helpers/_/_to_primitive/package.json1725962085047932337 0
 89/home/relow/projects/playground/three/node_modules/@swc/helpers/cjs/_get_prototype_of.cjs1725962085114931572 0
+57/home/relow/projects/playground/three/.idea/workspace.xml1727275137921985906 0
 92/home/relow/projects/playground/three/node_modules/lmdb/node_modules/node-addon-api/index.js1725962084860934470 0
-57/home/relow/projects/playground/three/.idea/workspace.xml1727270775667832811 0
 93/home/relow/projects/playground/three/node_modules/@parcel/config-default/test/config.test.js1725962084649936878 0
 91/home/relow/projects/playground/three/node_modules/@parcel/core/test/PackagerRunner.test.js1725962085010932759 0
 115/home/relow/projects/playground/three/node_modules/@parcel/optimizer-htmlnano/node_modules/css-select/lib/sort.d.ts1725962084778935407 0
@@ -2554,6 +2559,7 @@
 116/home/relow/projects/playground/three/node_modules/@parcel/optimizer-svgo/node_modules/css-select/lib/types.d.ts.map1725962084717936103 0
 98/home/relow/projects/playground/three/node_modules/@parcel/reporter-dev-server/src/serverErrors.js1725962084748935748 0
 72/home/relow/projects/playground/three/node_modules/@parcel/packager-wasm1725962084712936160 1
+58/home/relow/projects/playground/three/dist/bg.b6af9bb3.svg1727272965931730735 0
 92/home/relow/projects/playground/three/node_modules/@swc/helpers/_/_object_without_properties1725962085023932611 1
 86/home/relow/projects/playground/three/node_modules/lmdb/dependencies/lz4/lib/README.md1725962085320929222 0
 71/home/relow/projects/playground/three/node_modules/htmlnano/lib/modules1725962085000932873 1
@@ -2681,6 +2687,7 @@
 120/home/relow/projects/playground/three/node_modules/@parcel/optimizer-svgo/node_modules/mdn-data/css/syntaxes.schema.json1725962084801935144 0
 106/home/relow/projects/playground/three/node_modules/@parcel/core/test/fixtures/invalid-engines/package.json1725962085095931789 0
 109/home/relow/projects/playground/three/node_modules/@parcel/optimizer-svgo/node_modules/css-tree/lib/generator1725962084988933010 1
+72/home/relow/projects/playground/three/dist/letters-texture7.815eca74.png1727272413453859698 0
 104/home/relow/projects/playground/three/node_modules/css-select/node_modules/domhandler/lib/esm/index.d.ts1725962084582937643 0
 67/home/relow/projects/playground/three/node_modules/semver/range.bnf1725962084266941248 0
 75/home/relow/projects/playground/three/node_modules/js-yaml/lib/exception.js1725962084496938624 0
@@ -3319,6 +3326,7 @@
 86/home/relow/projects/playground/three/node_modules/svgo/plugins/removeScriptElement.js1725962084955933387 0
 110/home/relow/projects/playground/three/node_modules/three/src/renderers/webgl-fallback/nodes/GLSLNodeBuilder.js1725962317303417851 0
 50/home/relow/projects/playground/three/package.json1727270835291967971 0
+55/home/relow/projects/playground/three/src/assets/bg.svg1727273551751164820 0
 125/home/relow/projects/playground/three/node_modules/@parcel/optimizer-htmlnano/node_modules/css-tree/lib/syntax/node/Number.js1725962084971933204 0
 135/home/relow/projects/playground/three/node_modules/@parcel/optimizer-svgo/node_modules/css-select/lib/pseudo-selectors/aliases.d.ts.map1725962084593937517 0
 91/home/relow/projects/playground/three/node_modules/csso/node_modules/css-tree/cjs/index.cjs1725962084908933923 0
@@ -5499,6 +5507,7 @@
 103/home/relow/projects/playground/three/node_modules/three/src/renderers/common/StorageBufferAttribute.js1725962317400416852 0
 74/home/relow/projects/playground/three/node_modules/node-addon-api/index.js1725962084717936103 0
 82/home/relow/projects/playground/three/node_modules/caniuse-lite/data/regions/ID.js1725962085149931173 0
+54/home/relow/projects/playground/three/src/js/lights.js1727271476455602939 0
 76/home/relow/projects/playground/three/node_modules/node-addon-api/LICENSE.md1725962084735935897 0
 107/home/relow/projects/playground/three/node_modules/@swc/helpers/src/_class_apply_descriptor_destructure.mjs1725962085181930808 0
 75/home/relow/projects/playground/three/node_modules/node-addon-api/README.md1725962084741935829 0

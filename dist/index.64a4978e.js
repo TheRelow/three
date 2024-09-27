@@ -584,55 +584,158 @@ function hmrAccept(bundle /*: ParcelRequire */ , id /*: string */ ) {
 }
 
 },{}],"goJYj":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 var _three = require("three");
 var _orbitControls = require("three/examples/jsm/controls/OrbitControls");
+// Загрузка текстуры из файла
+var _lettersTexture7Png = require("./../assets/letters-texture7.png");
+var _lettersTexture7PngDefault = parcelHelpers.interopDefault(_lettersTexture7Png);
+// Добавление нового слоя с изображением bg.svg
+var _bgSvg = require("./../assets/bg.svg");
+var _bgSvgDefault = parcelHelpers.interopDefault(_bgSvg);
+// Инициализация рендерера
 const renderer = new _three.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
+// Создание сцены
 const scene = new _three.Scene();
+// Настройка камеры
 const camera = new _three.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+// Управление камерой
 const orbit = new (0, _orbitControls.OrbitControls)(camera, renderer.domElement);
 const axesHelper = new _three.AxesHelper(5);
 scene.add(axesHelper);
-const gridHelper = new _three.GridHelper(30);
-// scene.add(gridHelper)
-const sphereGeometry = new _three.SphereGeometry(4, 50, 50);
-const sphereMaterial = new _three.MeshBasicMaterial({
-    color: 0x0000FF,
-    wireframe: true
-});
-const sphere = new _three.Mesh(sphereGeometry, sphereMaterial);
-scene.add(sphere);
-// camera.position.z = 5
-// camera.position.y = 2
-// camera.position.x = 2
+// Создание сферы
+// const sphereGeometry = new THREE.SphereGeometry(4, 50, 50)
+// const sphereMaterial = new THREE.MeshBasicMaterial({
+//   color: 0x0000FF,
+//   wireframe: true,
+// })
+// const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial)
+// scene.add(sphere)
+// Позиция камеры
 camera.position.set(-10, 30, 30);
 orbit.update();
-const boxGeometry = new _three.BoxGeometry();
-const boxMaterial = new _three.MeshBasicMaterial({
-    color: 0x00FF00
+const textureLoader = new _three.TextureLoader();
+const lettersTexture = textureLoader.load((0, _lettersTexture7PngDefault.default), ()=>{
+    console.log("Texture loaded successfully");
+}, undefined, (error)=>{
+    console.error("An error occurred while loading the texture", error);
 });
-const box = new _three.Mesh(boxGeometry, boxMaterial);
-scene.add(box);
-box.rotation.x = 5;
-box.rotation.y = 5;
+// Создание нового шейдерного материала
+const newShaderMaterial = new _three.ShaderMaterial({
+    uniforms: {
+        iResolution: {
+            value: new _three.Vector2(window.innerWidth, window.innerHeight)
+        },
+        iTime: {
+            value: 0.0
+        },
+        iMouse: {
+            value: new _three.Vector2(-1000, -1000)
+        },
+        iChannel0: {
+            value: lettersTexture
+        },
+        symbolSize: {
+            value: 18.0
+        }
+    },
+    vertexShader: `
+    varying vec2 vUv;
+    void main() {
+      vUv = uv;
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    }
+  `,
+    fragmentShader: `
+    precision mediump float;
+    uniform vec2 iResolution;
+    uniform float iTime;
+    uniform vec2 iMouse;
+    uniform sampler2D iChannel0;
+    uniform float symbolSize;
+
+    float rand(float seed, float amt, float min) {
+      return floor(fract(sin(seed * 12.9898) * 43758.5453) * amt) + min;
+    }
+
+    float text(vec2 fragCoord) {
+      vec2 uv = mod(fragCoord, symbolSize) / symbolSize;
+      vec2 block = fragCoord / symbolSize - uv;
+      uv /= 8.0;
+
+      uv.x += rand(floor(block.x * 126.0 / block.y * 12.), 8., 0.) / 8.0;
+      uv.y = rand(floor(block.x * 126.0 / block.y * 12.), 4., 5.) / 8.0 - uv.y;
+
+      return texture2D(iChannel0, uv).r;
+    }
+
+    float rand(float x) {
+      return fract(sin(x * 12.9898) * 43758.5453);
+    }
+
+    vec3 rain(vec2 fragCoord) {
+      fragCoord.x -= mod(fragCoord.x, symbolSize);
+      float offset = sin(fragCoord.x * 1234.0);
+      float randomFactor = rand(fragCoord.x) * 0.9 + 0.1;
+      float randomScale = randomFactor * 3.5 + 1.;
+      float speed = (cos(fragCoord.x * 1234.0) * 0.07 + 0.17) / randomScale;
+      float y = fract(fragCoord.y / iResolution.y / randomScale + iTime * speed + offset);
+      float adjustedY = y > 0.03 ? 0.03 : y;
+      float intensity = smoothstep(325.0, 0.0, length(fragCoord.xy - iMouse.xy)) * 2.0 + 1.0;
+
+      return vec3(0.0, 0.373, 1.0) / (adjustedY * 20.0) * intensity;
+    }
+
+    void main() {
+      vec2 fragCoord = gl_FragCoord.xy;
+      vec3 backgroundColor = vec3(28.0 / 255.0, 24.0 / 255.0, 51.0 / 255.0);
+      vec3 textColor = text(fragCoord) * rain(fragCoord);
+      vec3 finalColor = mix(backgroundColor, textColor, length(textColor));
+      gl_FragColor = vec4(finalColor, 1.0);
+    }
+  `
+});
+// Создание плоскости с новым шейдерным материалом
 const planeGeometry = new _three.PlaneGeometry(30, 30);
-const planeMaterial = new _three.MeshBasicMaterial({
-    side: _three.DoubleSide,
-    color: 0xFFFFFF
-});
-const plane = new _three.Mesh(planeGeometry, planeMaterial);
+const plane = new _three.Mesh(planeGeometry, newShaderMaterial);
 scene.add(plane);
 plane.rotation.x = -0.5 * Math.PI;
+// Обновление униформ для шейдера
+function updateUniforms() {
+    newShaderMaterial.uniforms.iTime.value += 0.05;
+    newShaderMaterial.uniforms.iResolution.value.set(window.innerWidth, window.innerHeight);
+}
+const bgTexture = textureLoader.load((0, _bgSvgDefault.default), ()=>{
+    console.log("Background texture loaded successfully");
+}, undefined, (error)=>{
+    console.error("An error occurred while loading the background texture", error);
+});
+// Создание нового плоскостного объекта для фона
+const bgPlaneGeometry = new _three.PlaneGeometry(30, 30);
+const bgPlaneMaterial = new _three.MeshBasicMaterial({
+    map: bgTexture,
+    transparent: true
+});
+const bgPlane = new _three.Mesh(bgPlaneGeometry, bgPlaneMaterial);
+scene.add(bgPlane);
+bgPlane.rotation.x = -0.5 * Math.PI;
+bgPlane.position.y = 30 // Поднимаем на 30 пикселей
+;
+// Анимация
 function animate() {
-    box.rotation.x += 0.01;
-    box.rotation.y += 0.03;
-    box.rotation.z += 0.02;
+    updateUniforms();
     renderer.render(scene, camera);
 }
 renderer.setAnimationLoop(animate);
+// Обновление позиции мыши для шейдера
+document.addEventListener("mousemove", (event)=>{
+    const rect = renderer.domElement.getBoundingClientRect();
+    newShaderMaterial.uniforms.iMouse.value.set(event.clientX - rect.left, window.innerHeight - (event.clientY - rect.top));
+});
 
-},{"three":"ktPTu","three/examples/jsm/controls/OrbitControls":"7mqRv"}],"ktPTu":[function(require,module,exports) {
+},{"three":"ktPTu","three/examples/jsm/controls/OrbitControls":"7mqRv","./../assets/letters-texture7.png":"clcVH","./../assets/bg.svg":"8oQxQ","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"ktPTu":[function(require,module,exports) {
 /**
  * @license
  * Copyright 2010-2024 Three.js Authors
@@ -32999,6 +33102,47 @@ function interceptControlUp(event) {
     }
 }
 
-},{"three":"ktPTu","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["46PTB","goJYj"], "goJYj", "parcelRequiree385")
+},{"three":"ktPTu","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"clcVH":[function(require,module,exports) {
+module.exports = require("e292593e3e6a4178").getBundleURL("e6MYJ") + "letters-texture7.815eca74.png" + "?" + Date.now();
+
+},{"e292593e3e6a4178":"lgJ39"}],"lgJ39":[function(require,module,exports) {
+"use strict";
+var bundleURL = {};
+function getBundleURLCached(id) {
+    var value = bundleURL[id];
+    if (!value) {
+        value = getBundleURL();
+        bundleURL[id] = value;
+    }
+    return value;
+}
+function getBundleURL() {
+    try {
+        throw new Error();
+    } catch (err) {
+        var matches = ("" + err.stack).match(/(https?|file|ftp|(chrome|moz|safari-web)-extension):\/\/[^)\n]+/g);
+        if (matches) // The first two stack frames will be this function and getBundleURLCached.
+        // Use the 3rd one, which will be a runtime in the original bundle.
+        return getBaseURL(matches[2]);
+    }
+    return "/";
+}
+function getBaseURL(url) {
+    return ("" + url).replace(/^((?:https?|file|ftp|(chrome|moz|safari-web)-extension):\/\/.+)\/[^/]+$/, "$1") + "/";
+}
+// TODO: Replace uses with `new URL(url).origin` when ie11 is no longer supported.
+function getOrigin(url) {
+    var matches = ("" + url).match(/(https?|file|ftp|(chrome|moz|safari-web)-extension):\/\/[^/]+/);
+    if (!matches) throw new Error("Origin not found");
+    return matches[0];
+}
+exports.getBundleURL = getBundleURLCached;
+exports.getBaseURL = getBaseURL;
+exports.getOrigin = getOrigin;
+
+},{}],"8oQxQ":[function(require,module,exports) {
+module.exports = require("543d7c3c5b1a2402").getBundleURL("e6MYJ") + "bg.b6af9bb3.svg" + "?" + Date.now();
+
+},{"543d7c3c5b1a2402":"lgJ39"}]},["46PTB","goJYj"], "goJYj", "parcelRequiree385")
 
 //# sourceMappingURL=index.64a4978e.js.map
